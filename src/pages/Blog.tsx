@@ -80,7 +80,7 @@ const Blog = () => {
           <motion.div 
             ref={titleRef}
             initial={{ opacity: 1, y: 0 }}
-            animate={{ opacity: 1, y: 0 }} // Removed the conditional animation
+            animate={titleVisible ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }} // Fixed animation
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl md:text-7xl font-orbitron font-bold mb-6 relative">
@@ -109,7 +109,7 @@ const Blog = () => {
             ref={headingRef}
             className="text-center mb-16"
             initial={{ opacity: 1, y: 0 }}
-            animate={{ opacity: 1, y: 0 }} // Removed the conditional animation
+            animate={headingVisible ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }} // Fixed animation
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 relative">
