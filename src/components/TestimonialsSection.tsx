@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Avatar } from '@/components/ui/avatar';
 import { supabase } from '@/integrations/supabase/client'; // Add this import at the top
+import { Calendar, User, ArrowRight } from 'lucide-react';
 
 interface Testimonial {
   id: string;
@@ -141,7 +142,7 @@ const TestimonialsSection = () => {
         {/* View All Button */}
         <div className="text-center">
           <Button asChild variant="ghost" className="text-primary font-orbitron hover:text-primary/80 hover:bg-primary/20">
-            <Link to="/testimonials">View All Testimonials →</Link>
+            <Link to="/testimonials">View All Testimonials <ArrowRight size={16} /></Link>
           </Button>
         </div>
       </div>
