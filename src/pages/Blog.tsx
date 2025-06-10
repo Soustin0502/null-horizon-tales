@@ -105,20 +105,23 @@ const Blog = () => {
       {/* Blog Posts Section */}
       <section id="blog" className="py-20">
         <div className="container mx-auto px-4">
-          {/* Latest Posts Heading with Glow Effect */}
+          {/* Latest Posts Heading with Fixed Glow Effect */}
           <motion.div 
             ref={headingRef}
-            className="text-center mb-16 relative"
+            className="text-center mb-16"
             initial={{ opacity: 0, y: 20 }}
             animate={headingVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="relative inline-block">
+            <div className="relative">
               <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary relative z-10">
                 Latest Posts
               </h2>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-2xl scale-150 -z-10"></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 blur-3xl scale-200 -z-20"></div>
+              <div 
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+                           w-[200%] h-[200%] bg-gradient-to-r from-primary/20 via-secondary/20 
+                           to-accent/20 blur-[100px] -z-10 pointer-events-none"
+              ></div>
             </div>
             <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-4"></div>
           </motion.div>
