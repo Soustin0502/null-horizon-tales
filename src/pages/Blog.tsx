@@ -105,16 +105,16 @@ const Blog = () => {
       {/* Blog Posts Section */}
       <section id="blog" className="py-20">
         <div className="container mx-auto px-4">
-          {/* Latest Posts Heading with Same Glow Effect as Hero */}
+          {/* Latest Posts Heading with Persistent Glow Effect */}
           <motion.div 
             ref={headingRef}
             className="text-center mb-16"
-            initial={{ opacity: 0, y: 20 }}
-            animate={headingVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            initial={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary relative">
-              Latest Posts
+            <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 relative">
+              <span className="text-primary relative z-10">Latest Posts</span>
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-100 pointer-events-none"></div>
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-4"></div>
