@@ -79,8 +79,8 @@ const Blog = () => {
         <div className="container mx-auto px-4 text-center z-10">
           <motion.div 
             ref={titleRef}
-            initial={{ opacity: 0, y: 20 }}
-            animate={titleVisible ? { opacity: 1, y: 0 } : {}}
+            initial={{ opacity: 1, y: 0 }}
+            animate={titleVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl md:text-7xl font-orbitron font-bold mb-6 relative">
@@ -104,125 +104,129 @@ const Blog = () => {
 
       {/* Blog Posts Section */}
       <section id="blog" className="py-20">
-        <div className={`container mx-auto px-4 ${upcomingVisible ? 'animate' : ''}`}>
+        <div className="container mx-auto px-4">
           <motion.div 
-            className="text-center mb-16"
+            ref={upcomingRef}
+            className="text-center mb-16 relative"
           >
             <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary relative">
-                Latest Posts
-{/*               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-100 pointer-events-none"></div> */}
+              Latest Posts
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-50"></div>
             </h2>
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110"></div>
             <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
           </motion.div>
 
-          {loading ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(6)].map((_, i) => (
-                <Card key={i} className="bg-card/50 cyber-border animate-pulse">
-                  <CardHeader>
-                    <div className="h-6 bg-muted rounded w-3/4"></div>
-                    <div className="h-4 bg-muted rounded w-1/2"></div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <div className="h-4 bg-muted rounded"></div>
-                      <div className="h-4 bg-muted rounded"></div>
-                      <div className="h-4 bg-muted rounded w-3/4"></div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <motion.div
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-              variants={{
-                hidden: {},
-                visible: {
-                  transition: {
-                    staggerChildren: 0.1
-                  }
-                }
-              }}
-              initial="hidden"
-              animate={blogVisible ? "visible" : "hidden"}
-            >
-              {posts.map((post) => (
-                <motion.div
-                  key={post.id}
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <Card className="bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 h-full">
+          <div className="relative z-10">
+            {loading ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {[...Array(6)].map((_, i) => (
+                  <Card key={i} className="bg-card/50 cyber-border animate-pulse">
                     <CardHeader>
-                      <CardTitle className="text-lg font-orbitron text-primary">
-                        {post.title}
-                      </CardTitle>
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                        <Calendar size={14} />
-                        <span className="font-fira">
-                          {new Date(post.created_at).toLocaleDateString()}
-                        </span>
-                      </div>
+                      <div className="h-6 bg-muted rounded w-3/4"></div>
+                      <div className="h-4 bg-muted rounded w-1/2"></div>
                     </CardHeader>
-
-                    <CardContent className="flex flex-col gap-4">
-                      <p className="text-foreground/80 font-fira text-sm leading-relaxed">
-                        {expandedPosts.has(post.id) ? post.content : post.excerpt}
-                      </p>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => toggleExpand(post.id)}
-                        className="self-start"
-                      >
-                        {expandedPosts.has(post.id) ? (
-                          <>
-                            Read Less
-                            <ChevronUp className="ml-2 h-4 w-4" />
-                          </>
-                        ) : (
-                          <>
-                            Read More
-                            <ChevronDown className="ml-2 h-4 w-4" />
-                          </>
-                        )}
-                      </Button>
-                      <div className="flex items-center gap-2 mt-2">
-                        <User size={16} className="text-muted-foreground" />
-                        <span className="text-muted-foreground font-fira text-sm">
-                          {post.author}
-                        </span>
-                        <Badge variant="secondary">{post.category}</Badge>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div className="h-4 bg-muted rounded"></div>
+                        <div className="h-4 bg-muted rounded"></div>
+                        <div className="h-4 bg-muted rounded w-3/4"></div>
                       </div>
-                      {post.instagram_post_url && (
-                        <Button
-                          variant="link"
-                          size="sm"
-                          asChild
-                          className="justify-start"
-                        >
-                          <a
-                            href={post.instagram_post_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-1"
-                          >
-                            View on Instagram
-                            <ExternalLink size={16} />
-                          </a>
-                        </Button>
-                      )}
                     </CardContent>
                   </Card>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
+                ))}
+              </div>
+            ) : (
+              <motion.div
+                ref={blogRef}
+                className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.1
+                    }
+                  }
+                }}
+                initial="hidden"
+                animate={blogVisible ? "visible" : "hidden"}
+              >
+                {posts.map((post) => (
+                  <motion.div
+                    key={post.id}
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: { opacity: 1, y: 0 }
+                    }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <Card className="bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 h-full">
+                      <CardHeader>
+                        <CardTitle className="text-lg font-orbitron text-primary">
+                          {post.title}
+                        </CardTitle>
+                        <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                          <Calendar size={14} />
+                          <span className="font-fira">
+                            {new Date(post.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </CardHeader>
+
+                      <CardContent className="flex flex-col gap-4">
+                        <p className="text-foreground/80 font-fira text-sm leading-relaxed">
+                          {expandedPosts.has(post.id) ? post.content : post.excerpt}
+                        </p>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleExpand(post.id)}
+                          className="self-start"
+                        >
+                          {expandedPosts.has(post.id) ? (
+                            <>
+                              Read Less
+                              <ChevronUp className="ml-2 h-4 w-4" />
+                            </>
+                          ) : (
+                            <>
+                              Read More
+                              <ChevronDown className="ml-2 h-4 w-4" />
+                            </>
+                          )}
+                        </Button>
+                        <div className="flex items-center gap-2 mt-2">
+                          <User size={16} className="text-muted-foreground" />
+                          <span className="text-muted-foreground font-fira text-sm">
+                            {post.author}
+                          </span>
+                          <Badge variant="secondary">{post.category}</Badge>
+                        </div>
+                        {post.instagram_post_url && (
+                          <Button
+                            variant="link"
+                            size="sm"
+                            asChild
+                            className="justify-start"
+                          >
+                            <a
+                              href={post.instagram_post_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1"
+                            >
+                              View on Instagram
+                              <ExternalLink size={16} />
+                            </a>
+                          </Button>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+          </div>
         </div>
       </section>
 
