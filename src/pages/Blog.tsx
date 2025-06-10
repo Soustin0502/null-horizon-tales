@@ -28,7 +28,6 @@ const Blog = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedPosts, setExpandedPosts] = useState<Set<string>>(new Set());
-  const [upcomingRef, upcomingVisible] = useScrollAnimation();
 
   useEffect(() => {
     fetchPosts();
@@ -105,18 +104,15 @@ const Blog = () => {
       {/* Blog Posts Section */}
       <section id="blog" className="py-20">
         <div className="container mx-auto px-4">
-          <motion.div 
-            ref={upcomingRef}
-            className="text-center mb-16 relative"
-          >
-            <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary relative">
+          <div className="text-center mb-16 relative">
+            <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary relative inline-block">
               Latest Posts
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-50"></div>
             </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
-          </motion.div>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-4"></div>
+          </div>
 
-          <div className="relative z-10">
+          <div className="relative z-10" ref={blogRef}>
             {loading ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[...Array(6)].map((_, i) => (
@@ -137,28 +133,17 @@ const Blog = () => {
               </div>
             ) : (
               <motion.div
-                ref={blogRef}
                 className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-                variants={{
-                  hidden: { opacity: 0 },
-                  visible: {
-                    opacity: 1,
-                    transition: {
-                      staggerChildren: 0.1
-                    }
-                  }
-                }}
-                initial="hidden"
-                animate={blogVisible ? "visible" : "hidden"}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
               >
-                {posts.map((post) => (
+                {posts.map((post, index) => (
                   <motion.div
                     key={post.id}
-                    variants={{
-                      hidden: { opacity: 0, y: 20 },
-                      visible: { opacity: 1, y: 0 }
-                    }}
-                    transition={{ duration: 0.5 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
                     <Card className="bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 h-full">
                       <CardHeader>
