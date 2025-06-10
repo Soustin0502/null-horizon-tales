@@ -63,6 +63,13 @@ const Blog = () => {
     });
   };
 
+  const scrollToNextSection = () => {
+    const blogSection = document.getElementById('blog');
+    if (blogSection) {
+      blogSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Navbar />
@@ -78,13 +85,21 @@ const Blog = () => {
           >
             <h1 className="text-4xl md:text-7xl font-orbitron font-bold mb-6 relative">
               <span className="text-cyber relative z-10">Blog</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-100 pointer-events-none"></div>
             </h1>
             <p className="text-xl font-fira text-foreground/80 max-w-3xl mx-auto mb-8">
               Latest updates, announcements, and insights from WarP Computer Club
             </p>
           </motion.div>
         </div>
+
+        <button 
+          onClick={scrollToNextSection}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer bg-transparent border-none"
+          aria-label="Scroll to next section"
+        >
+          <ChevronDown className="text-primary" size={24} />
+        </button>
       </section>
 
       {/* Blog Posts Section */}
@@ -99,7 +114,7 @@ const Blog = () => {
           >
             <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary relative">
               Latest Posts
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-100 pointer-events-none"></div>
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
           </motion.div>

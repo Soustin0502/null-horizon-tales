@@ -29,6 +29,7 @@ const FeedbacksSection = () => {
 
   const fetchTestimonials = async () => {
     try {
+      console.log('Fetching testimonials...');
       const { data, error } = await supabase
         .from('testimonials')
         .select('*')
@@ -36,7 +37,12 @@ const FeedbacksSection = () => {
         .order('created_at', { ascending: false })
         .limit(6);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching testimonials:', error);
+        throw error;
+      }
+      
+      console.log('Fetched testimonials:', data);
       setTestimonials(data || []);
     } catch (error) {
       console.error('Error fetching testimonials:', error);
@@ -85,9 +91,7 @@ const FeedbacksSection = () => {
     );
   }
 
-  if (testimonials.length === 0) {
-    return null;
-  }
+  console.log('Rendering testimonials:', testimonials.length);
 
   return (
     <section 
@@ -108,71 +112,85 @@ const FeedbacksSection = () => {
           <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
         </motion.div>
 
-        <motion.div
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
-          variants={{
-            hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: 0.1
-              }
-            }
-          }}
-          initial="hidden"
-          animate={sectionVisible ? "visible" : "hidden"}
-        >
-          {testimonials.map((testimonial) => (
+        {testimonials.length === 0 ? (
+          <div className="text-center py-16">
+            <p className="text-foreground/60 font-fira text-lg">No feedbacks available yet. Be the first to share your experience!</p>
+            <Button asChild className="mt-4 bg-primary hover:bg-primary/80 text-primary-foreground font-fira">
+              <Link to="/feedbacks" className="flex items-center gap-2">
+                Share Your Feedback
+                <ArrowRight size={16} />
+              </Link>
+            </Button>
+          </div>
+        ) : (
+          <>
             <motion.div
-              key={testimonial.id}
+              className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
               variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0 }
+                hidden: {},
+                visible: {
+                  transition: {
+                    staggerChildren: 0.1
+                  }
+                }
               }}
-              transition={{ duration: 0.5 }}
+              initial="hidden"
+              animate={sectionVisible ? "visible" : "hidden"}
             >
-              <Card className="bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 h-full">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg font-orbitron text-primary">
-                      {testimonial.name}
-                    </CardTitle>
-                    {testimonial.rating && (
-                      <div className="flex gap-1">
-                        {renderStars(testimonial.rating)}
+              {testimonials.map((testimonial) => (
+                <motion.div
+                  key={testimonial.id}
+                  variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: { opacity: 1, y: 0 }
+                  }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Card className="bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 h-full">
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-lg font-orbitron text-primary">
+                          {testimonial.name}
+                        </CardTitle>
+                        {testimonial.rating && (
+                          <div className="flex gap-1">
+                            {renderStars(testimonial.rating)}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  {testimonial.position && (
-                    <Badge variant="outline" className="w-fit">
-                      {testimonial.position}
-                    </Badge>
-                  )}
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <Calendar size={14} />
-                    <span className="font-fira">
-                      {new Date(testimonial.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                </CardHeader>
+                      {testimonial.position && (
+                        <Badge variant="outline" className="w-fit">
+                          {testimonial.position}
+                        </Badge>
+                      )}
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <Calendar size={14} />
+                        <span className="font-fira">
+                          {new Date(testimonial.created_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </CardHeader>
 
-                <CardContent>
-                  <p className="text-foreground/80 font-fira text-sm leading-relaxed">
-                    "{testimonial.feedback}"
-                  </p>
-                </CardContent>
-              </Card>
+                    <CardContent>
+                      <p className="text-foreground/80 font-fira text-sm leading-relaxed">
+                        "{testimonial.feedback}"
+                      </p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
             </motion.div>
-          ))}
-        </motion.div>
 
-        <div className="text-center">
-          <Button asChild className="bg-primary hover:bg-primary/80 text-primary-foreground font-fira">
-            <Link to="/feedbacks" className="flex items-center gap-2">
-              View All Feedbacks
-              <ArrowRight size={16} />
-            </Link>
-          </Button>
-        </div>
+            <div className="text-center">
+              <Button asChild className="bg-primary hover:bg-primary/80 text-primary-foreground font-fira">
+                <Link to="/feedbacks" className="flex items-center gap-2">
+                  View All Feedbacks
+                  <ArrowRight size={16} />
+                </Link>
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

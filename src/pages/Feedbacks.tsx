@@ -78,7 +78,7 @@ const Feedbacks = () => {
           >
             <h1 className="text-4xl md:text-7xl font-orbitron font-bold mb-6 relative">
               <span className="text-cyber relative z-10">Feedbacks</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-100"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-100 pointer-events-none"></div>
             </h1>
             <p className="text-xl font-fira text-foreground/80 max-w-3xl mx-auto mb-8">
               See what our community members say about WarP Computer Club
@@ -96,7 +96,7 @@ const Feedbacks = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="py-20">
+      <section id="testimonials" className="py-20 relative z-10">
         <div className="container mx-auto px-4">
           <motion.div 
             ref={feedbacksRef}
@@ -107,7 +107,7 @@ const Feedbacks = () => {
           >
             <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary relative">
               Community Feedbacks
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-100"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-100 pointer-events-none"></div>
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
           </motion.div>
@@ -192,7 +192,7 @@ const Feedbacks = () => {
       </section>
 
       {/* Feedback Form Section */}
-      <section className="py-20">
+      <section className="py-20 relative z-10">
         <div className="container mx-auto px-4">
           <FeedbackForm />
         </div>
