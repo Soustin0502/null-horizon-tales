@@ -29,6 +29,7 @@ const Blog = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedPosts, setExpandedPosts] = useState<Set<string>>(new Set());
+  const [upcomingRef, upcomingVisible] = useScrollAnimation();
 
   useEffect(() => {
     fetchPosts();
@@ -104,7 +105,7 @@ const Blog = () => {
 
       {/* Blog Posts Section */}
       <section id="blog" className="py-20">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 ">
           <motion.div 
             ref={blogRef}
             initial={{ opacity: 0, y: 20 }}
