@@ -1,8 +1,8 @@
-# Welcome to your Lovable project
+# Welcome to our WarP project 
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/bd80837e-cf48-4548-a5a0-dd03da1797f7
+**URL**: https://lovable.dev/projects/02b3aecc-efd5-4238-8400-154453788f7b
 
 ## How can I edit this code?
 
@@ -10,7 +10,7 @@ There are several ways of editing your application.
 
 **Use Lovable**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/bd80837e-cf48-4548-a5a0-dd03da1797f7) and start prompting.
+Simply visit the [Lovable Project](https://lovable.dev/projects/02b3aecc-efd5-4238-8400-154453788f7b) and start prompting.
 
 Changes made via Lovable will be committed automatically to this repo.
 
@@ -62,7 +62,7 @@ This project is built with:
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/bd80837e-cf48-4548-a5a0-dd03da1797f7) and click on Share -> Publish.
+Simply open [Lovable](https://lovable.dev/projects/02b3aecc-efd5-4238-8400-154453788f7b) and click on Share -> Publish.
 
 ## Can I connect a custom domain to my Lovable project?
 
