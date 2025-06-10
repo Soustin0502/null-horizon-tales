@@ -191,6 +191,7 @@ const Events = () => {
             <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary">
               Upcoming Events
             </h2>
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110"></div>
             <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
           </div>
 
@@ -261,8 +262,10 @@ const Events = () => {
           </div>
 
           {/* Past Events */}
-          <div className="text-center mb-12">
-            <h3 className="text-2xl md:text-4xl font-orbitron font-bold mb-4 text-secondary">
+          <div
+            ref={upcomingRef}
+            className={`text-center mb-16 scroll-fade-in ${upcomingVisible ? 'animate' : ''}`}>
+            <h3 className="text-2xl md:text-4xl font-orbitron font-bold mb-4 text-primary">
               Past Events
             </h3>
             <div className="w-16 h-1 bg-gradient-to-r from-secondary to-accent mx-auto"></div>
