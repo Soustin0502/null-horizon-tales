@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Avatar } from '@/components/ui/avatar';
+import { supabase } from '@/integrations/supabase/client'; // Add this import at the top
 
 interface Testimonial {
   id: string;
@@ -24,10 +25,8 @@ const TestimonialsSection = () => {
     fetchTestimonials();
   }, []);
 
-  // Keep your existing fetchTestimonials function here
   const fetchTestimonials = async () => {
     try {
-      // Log before fetching
       console.log('Fetching testimonials...');
       
       const { data, error } = await supabase
@@ -35,10 +34,9 @@ const TestimonialsSection = () => {
         .select('*')
         .order('created_at', { ascending: false })
         .limit(3);
-  
-      // Log the response
+
       console.log('Supabase response:', { data, error });
-  
+
       if (error) throw error;
       
       if (data) {
