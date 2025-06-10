@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -5,41 +6,78 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
-import { Avatar } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { ArrowRight } from 'lucide-react';
 
-interface Feedback {
+interface Testimonial {
   id: string;
   created_at: string;
   name: string;
-  image_url: string;
   feedback: string;
-  rating: number;
+  rating?: number;
+  position?: string;
 }
 
 const FeedbacksSection = () => {
   const [sectionRef, sectionVisible] = useScrollAnimation();
-  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Function to get initials from name
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase();
+  };
+
   useEffect(() => {
-    fetchFeedbacks();
+    fetchTestimonials();
   }, []);
 
-  const fetchFeedbacks = async () => {
+  const fetchTestimonials = async () => {
     try {
+      console.log('Fetching testimonials for FeedbacksSection...');
+      
       const { data, error } = await supabase
-        .from('feedbacks')
+        .from('testimonials')
         .select('*')
+        .eq('approved', true)
         .order('created_at', { ascending: false })
-        .limit(3); // Fetch only 3 most recent feedbacks
+        .limit(3);
 
-      if (error) throw error;
-      setFeedbacks(data || []);
+      console.log('Supabase response for feedbacks:', { data, error });
+
+      if (error) {
+        console.error('Error fetching testimonials:', error);
+        throw error;
+      }
+      
+      if (data) {
+        console.log('Testimonials fetched for feedbacks section:', data);
+        setTestimonials(data);
+      } else {
+        console.log('No testimonials data received');
+        setTestimonials([]);
+      }
     } catch (error) {
-      console.error('Error fetching feedbacks:', error);
+      console.error('Error in fetchTestimonials:', error);
+      setTestimonials([]);
     } finally {
       setLoading(false);
     }
+  };
+
+  const renderStars = (rating: number) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <span
+        key={i}
+        className={i < rating ? 'text-yellow-400' : 'text-gray-300'}
+      >
+        ★
+      </span>
+    ));
   };
 
   return (
@@ -51,7 +89,7 @@ const FeedbacksSection = () => {
         >
           <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 relative">
             <span className="text-cyber relative z-10">Community Feedbacks</span>
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-100 pointer-events-none"></div>
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-6"></div>
           <p className="text-xl font-fira text-foreground/80 max-w-3xl mx-auto">
@@ -80,6 +118,12 @@ const FeedbacksSection = () => {
                 </Card>
               ))}
             </div>
+          ) : testimonials.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-foreground/60 font-fira text-lg">
+                No feedbacks available yet. Be the first to share your experience!
+              </p>
+            </div>
           ) : (
             <motion.div
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
@@ -95,9 +139,9 @@ const FeedbacksSection = () => {
               initial="hidden"
               animate={sectionVisible ? "visible" : "hidden"}
             >
-              {feedbacks.map((feedback, index) => (
+              {testimonials.map((testimonial, index) => (
                 <motion.div
-                  key={feedback.id}
+                  key={testimonial.id}
                   variants={{
                     hidden: { opacity: 0, y: 20 },
                     visible: { opacity: 1, y: 0 }
@@ -106,20 +150,27 @@ const FeedbacksSection = () => {
                 >
                   <Card className="bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 p-6">
                     <div className="flex items-center gap-4 mb-4">
-                      <Avatar className="w-12 h-12">
-                        <img src={feedback.image_url} alt={feedback.name} className="object-cover" />
+                      <Avatar className="w-12 h-12 bg-primary/20">
+                        <AvatarFallback className="bg-primary/20 text-primary font-medium">
+                          {getInitials(testimonial.name)}
+                        </AvatarFallback>
                       </Avatar>
-                      <div>
-                        <h4 className="font-orbitron text-primary">{feedback.name}</h4>
-                        <div className="flex items-center mt-1">
-                          {[...Array(feedback.rating)].map((_, i) => (
-                            <span key={i} className="text-yellow-500">★</span>
-                          ))}
-                        </div>
+                      <div className="flex-1">
+                        <h4 className="font-orbitron text-primary">{testimonial.name}</h4>
+                        {testimonial.position && (
+                          <p className="text-sm text-muted-foreground font-fira">
+                            {testimonial.position}
+                          </p>
+                        )}
+                        {testimonial.rating && (
+                          <div className="flex items-center mt-1">
+                            {renderStars(testimonial.rating)}
+                          </div>
+                        )}
                       </div>
                     </div>
                     <p className="text-foreground/80 font-fira text-sm leading-relaxed">
-                      {feedback.feedback}
+                      "{testimonial.feedback}"
                     </p>
                   </Card>
                 </motion.div>
@@ -130,8 +181,12 @@ const FeedbacksSection = () => {
 
         {/* View All Button */}
         <div className="text-center">
-          <Button asChild variant="ghost" className="text-primary font-orbitron hover:text-primary/80 hover:bg-primary/20">
-            <Link to="/feedbacks">View All Feedbacks →</Link>
+          <Button 
+            asChild 
+            variant="ghost" 
+            className="text-primary font-orbitron hover:text-primary/80 hover:bg-primary/20 transition-colors"
+          >
+            <Link to="/feedbacks">View All Feedbacks <ArrowRight size={16} /></Link>
           </Button>
         </div>
       </div>
