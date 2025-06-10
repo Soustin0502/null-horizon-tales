@@ -26,7 +26,20 @@ const TestimonialsSection = () => {
 
   // Keep your existing fetchTestimonials function here
   const fetchTestimonials = async () => {
-    // Your existing testimonials fetching logic
+    try {
+      const { data, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .eq('approved', true)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setTestimonials(data || []);
+    } catch (error) {
+      console.error('Error fetching testimonials:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
