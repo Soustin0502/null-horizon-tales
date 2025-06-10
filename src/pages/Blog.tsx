@@ -108,12 +108,12 @@ const Blog = () => {
           <motion.div 
             className="text-center mb-16"
           >
-          <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary relative">
-              Latest Posts
+            <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary relative">
+                Latest Posts
 {/*               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-100 pointer-events-none"></div> */}
-          </h2>
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110"></div>
-          <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
+            </h2>
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
           </motion.div>
 
           {loading ? (
