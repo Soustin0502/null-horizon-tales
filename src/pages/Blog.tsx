@@ -107,10 +107,10 @@ const Blog = () => {
         <div className="container mx-auto px-4">
           {/* Latest Posts Heading with Persistent Glow Effect */}
           <motion.div 
-            ref={headingRef}
             className="text-center mb-16"
+            ref={titleRef}
             initial={{ opacity: 1, y: 0 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={titleVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 relative">
