@@ -4,8 +4,8 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Avatar } from '@/components/ui/avatar';
-import { supabase } from '@/integrations/supabase/client'; // Add this import at the top
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'; // Add AvatarFallback
+import { supabase } from '@/integrations/supabase/client';
 import { Calendar, User, ArrowRight } from 'lucide-react';
 
 interface Testimonial {
@@ -21,6 +21,15 @@ const TestimonialsSection = () => {
   const [sectionRef, sectionVisible] = useScrollAnimation();
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Function to get initials from name
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase();
+  };
 
   useEffect(() => {
     fetchTestimonials();
@@ -119,8 +128,10 @@ const TestimonialsSection = () => {
                 >
                   <Card className="bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 p-6">
                     <div className="flex items-center gap-4 mb-4">
-                      <Avatar className="w-12 h-12">
-                        <img src={testimonial.image_url} alt={testimonial.name} className="object-cover" />
+                      <Avatar className="w-12 h-12 bg-primary/20">
+                        <AvatarFallback className="bg-primary/20 text-primary font-medium">
+                          {getInitials(testimonial.name)}
+                        </AvatarFallback>
                       </Avatar>
                       <div>
                         <h4 className="font-orbitron text-primary">{testimonial.name}</h4>
@@ -139,9 +150,13 @@ const TestimonialsSection = () => {
           )}
         </div>
 
-        {/* View All Button */}
+        {/* View All Button - Updated to match View All Posts styling */}
         <div className="text-center">
-          <Button asChild variant="ghost" className="text-primary font-orbitron hover:text-primary/80 hover:bg-primary/20">
+          <Button 
+            asChild 
+            variant="ghost" 
+            className="text-primary font-orbitron hover:text-primary/80 hover:bg-primary/20 transition-colors"
+          >
             <Link to="/testimonials">View All Testimonials <ArrowRight size={16} /></Link>
           </Button>
         </div>
