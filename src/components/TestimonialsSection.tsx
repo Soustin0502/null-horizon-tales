@@ -161,7 +161,7 @@ const TestimonialsSection = () => {
           <Button 
             asChild 
             variant="ghost" 
-            className="text-[#FF69B4] font-orbitron hover:text-[#FF69B4]/80 hover:bg-[#FF69B4]/20"
+            className="bg-primary hover:bg-primary/80 text-primary-foreground font-fira"
           >
             <Link to="/testimonials">View All Testimonials <ArrowRight size={16} /></Link>
           </Button>
