@@ -133,6 +133,24 @@
     transition: background-image 0.3s ease;
   }
 
+  /* Fixed glow effect behind headings - prevents disappearing on scroll */
+  .heading-glow {
+    position: relative;
+  }
+
+  .heading-glow::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, hsl(var(--primary) / 0.2), hsl(var(--secondary) / 0.2), hsl(var(--accent) / 0.2));
+    border-radius: inherit;
+    filter: blur(20px);
+    z-index: -1;
+    scale: 1.1;
+    opacity: 1;
+    pointer-events: none;
+  }
+
   /* Events cards overlapping animation - updated with less tilting and better positioning */
   .events-container {
     display: flex;
