@@ -80,7 +80,7 @@ const Blog = () => {
           <motion.div 
             ref={titleRef}
             initial={{ opacity: 1, y: 0 }}
-            animate={titleVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }} // Removed the conditional animation
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl md:text-7xl font-orbitron font-bold mb-6 relative">
@@ -92,7 +92,7 @@ const Blog = () => {
             </p>
           </motion.div>
         </div>
-
+      
         <button 
           onClick={scrollToNextSection}
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer bg-transparent border-none"
@@ -101,16 +101,15 @@ const Blog = () => {
           <ChevronDown className="text-primary" size={24} />
         </button>
       </section>
-
+      
       {/* Blog Posts Section */}
       <section id="blog" className="py-20">
         <div className="container mx-auto px-4">
-          {/* Latest Posts Heading with Persistent Glow Effect */}
           <motion.div 
-            className="text-center mb-16"
             ref={headingRef}
+            className="text-center mb-16"
             initial={{ opacity: 1, y: 0 }}
-            animate={headingVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }} // Removed the conditional animation
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 relative">
