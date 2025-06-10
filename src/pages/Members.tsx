@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -100,7 +101,7 @@ const Members = () => {
           >
             <h1 className="text-4xl md:text-7xl font-orbitron font-bold mb-6 relative">
               <span className="text-cyber relative z-10">Our Team</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-100"></div>
             </h1>
             <p className="text-xl font-fira text-foreground/80 max-w-3xl mx-auto mb-8">
               Meet the passionate minds behind WarP Computer Club
@@ -121,60 +122,58 @@ const Members = () => {
           >
             <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary relative">
               Our Core Members
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-100"></div>
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {memberData.map((member) => (
+            {memberData.map((member, index) => (
               <motion.div
                 key={member.id}
-                className="member-card bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300"
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 }
-                }}
-                transition={{ duration: 0.5 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={membersVisible ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <div className="relative">
-                  <img
-                    src={member.image_url}
-                    alt={member.name}
-                    className="member-image w-full h-64 object-cover rounded-t-md transition-all duration-300"
-                  />
-                  <div className="member-fade absolute inset-0"></div>
-                </div>
-                <CardContent className="relative p-6">
-                  <CardTitle className="text-xl font-orbitron text-primary mb-2">
-                    {member.name}
-                  </CardTitle>
-                  <Badge variant="secondary" className="mb-3 w-fit">
-                    {member.position}
-                  </Badge>
-                  <div className="flex space-x-4 mt-4">
-                    {member.linkedin_url && (
-                      <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer">
-                        <Linkedin size={20} className="text-foreground/80 hover:text-primary transition-colors" />
-                      </a>
-                    )}
-                    {member.github_url && (
-                      <a href={member.github_url} target="_blank" rel="noopener noreferrer">
-                        <Github size={20} className="text-foreground/80 hover:text-primary transition-colors" />
-                      </a>
-                    )}
-                    {member.email && (
-                      <a href={`mailto:${member.email}`}>
-                        <Mail size={20} className="text-foreground/80 hover:text-primary transition-colors" />
-                      </a>
-                    )}
-                    {member.website_url && (
-                      <a href={member.website_url} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink size={20} className="text-foreground/80 hover:text-primary transition-colors" />
-                      </a>
-                    )}
+                <Card className="bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 h-full">
+                  <div className="relative">
+                    <img
+                      src={member.image_url}
+                      alt={member.name}
+                      className="w-full h-64 object-cover rounded-t-md filter grayscale hover:grayscale-0 transition-all duration-300"
+                    />
                   </div>
-                </CardContent>
+                  <CardContent className="relative p-6">
+                    <CardTitle className="text-xl font-orbitron text-primary mb-2">
+                      {member.name}
+                    </CardTitle>
+                    <Badge variant="secondary" className="mb-3 w-fit">
+                      {member.position}
+                    </Badge>
+                    <div className="flex space-x-4 mt-4">
+                      {member.linkedin_url && (
+                        <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer">
+                          <Linkedin size={20} className="text-foreground/80 hover:text-primary transition-colors" />
+                        </a>
+                      )}
+                      {member.github_url && (
+                        <a href={member.github_url} target="_blank" rel="noopener noreferrer">
+                          <Github size={20} className="text-foreground/80 hover:text-primary transition-colors" />
+                        </a>
+                      )}
+                      {member.email && (
+                        <a href={`mailto:${member.email}`}>
+                          <Mail size={20} className="text-foreground/80 hover:text-primary transition-colors" />
+                        </a>
+                      )}
+                      {member.website_url && (
+                        <a href={member.website_url} target="_blank" rel="noopener noreferrer">
+                          <ExternalLink size={20} className="text-foreground/80 hover:text-primary transition-colors" />
+                        </a>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
               </motion.div>
             ))}
           </div>
