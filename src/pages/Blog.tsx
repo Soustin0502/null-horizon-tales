@@ -24,7 +24,8 @@ interface BlogPost {
 
 const Blog = () => {
   const [titleRef, titleVisible] = useScrollAnimation();
-  const [blogRef, blogVisible] = useScrollAnimation();
+  const [headingRef, headingVisible] = useScrollAnimation(0.2);
+  const [blogRef, blogVisible] = useScrollAnimation(0.3);
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedPosts, setExpandedPosts] = useState<Set<string>>(new Set());
@@ -104,15 +105,32 @@ const Blog = () => {
       {/* Blog Posts Section */}
       <section id="blog" className="py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 relative">
-            <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary relative inline-block">
-              Latest Posts
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-50"></div>
-            </h2>
+          {/* Latest Posts Heading with Glow Effect */}
+          <motion.div 
+            ref={headingRef}
+            className="text-center mb-16 relative"
+            initial={{ opacity: 0, y: 20 }}
+            animate={headingVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="relative inline-block">
+              <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary relative z-10">
+                Latest Posts
+              </h2>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-2xl scale-150 -z-10"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 blur-3xl scale-200 -z-20"></div>
+            </div>
             <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-4"></div>
-          </div>
+          </motion.div>
 
-          <div className="relative z-10" ref={blogRef}>
+          {/* Blog Posts Grid */}
+          <motion.div 
+            className="relative z-10"
+            ref={blogRef}
+            initial={{ opacity: 0, y: 20 }}
+            animate={blogVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6 }}
+          >
             {loading ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[...Array(6)].map((_, i) => (
@@ -134,15 +152,25 @@ const Blog = () => {
             ) : (
               <motion.div
                 className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: {
+                      staggerChildren: 0.1
+                    }
+                  }
+                }}
+                initial="hidden"
+                animate={blogVisible ? "visible" : "hidden"}
               >
                 {posts.map((post, index) => (
                   <motion.div
                     key={post.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: { opacity: 1, y: 0 }
+                    }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
                     <Card className="bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 h-full">
@@ -211,7 +239,7 @@ const Blog = () => {
                 ))}
               </motion.div>
             )}
-          </div>
+          </motion.div>
         </div>
       </section>
 
