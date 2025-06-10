@@ -163,7 +163,7 @@ const Members = () => {
                 <CardTitle className="text-3xl font-orbitron font-bold text-primary">
                   {members.length}
                 </CardTitle>
-                <p className="text-muted-foreground font-fira">Active Members</p>
+                <p className="text-muted-foreground font-fira">Core Members</p>
               </CardHeader>
               <CardContent>
                 <p className="text-center font-fira text-sm text-foreground/80">
