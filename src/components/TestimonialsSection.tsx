@@ -157,7 +157,7 @@ const TestimonialsSection = () => {
             variant="ghost" 
             className="text-primary font-orbitron hover:text-primary/80 hover:bg-primary/20 transition-colors"
           >
-            <Link to="/testimonials">View All Testimonials <ArrowRight size={16} /></Link>
+            <Link to="/feedbacks">View All Testimonials <ArrowRight size={16} /></Link>
           </Button>
         </div>
       </div>
