@@ -107,10 +107,6 @@ const Blog = () => {
         <div className={`container mx-auto px-4 ${upcomingVisible ? 'animate' : ''}`}>
           <motion.div 
             className="text-center mb-16"
-            ref={titleRef}
-            initial={{ opacity: 0, y: 20 }}
-            animate={titleVisible ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
           >
             <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary relative">
                 Latest Posts
