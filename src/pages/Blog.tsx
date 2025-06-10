@@ -118,8 +118,6 @@ const Blog = () => {
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-4"></div>
           </motion.div>
-        </div>
-      </section>
 
           {/* Blog Posts Grid */}
           <motion.div 
