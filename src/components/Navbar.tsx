@@ -51,7 +51,7 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-8">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -112,9 +112,10 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-2">
-            <div className="flex items-center space-x-1 bg-muted/50 rounded-full p-1 border border-border">
+          {/* Mobile/Tablet Controls */}
+          <div className="lg:hidden flex items-center space-x-2">
+            {/* Theme Toggle for smaller screens */}
+            <div className="hidden sm:flex items-center space-x-1 bg-muted/50 rounded-full p-1 border border-border">
               <Sun size={14} className={`transition-colors ${theme === 'light' ? 'text-primary' : 'text-muted-foreground'}`} />
               <Switch
                 checked={theme === 'dark'}
@@ -124,38 +125,59 @@ const Navbar = () => {
               <Moon size={14} className={`transition-colors ${theme === 'dark' ? 'text-primary' : 'text-muted-foreground'}`} />
             </div>
             
+            {/* Hamburger Menu Button */}
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsOpen(!isOpen)}
-              className="text-primary"
+              className="text-primary p-2"
             >
-              {isOpen ? <X size={20} /> : <Menu size={20} />}
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
             </Button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation Menu */}
         {isOpen && (
-          <div className="md:hidden bg-card/95 backdrop-blur-sm border border-primary/20 rounded-lg mt-2 p-4">
+          <div className="lg:hidden bg-card/95 backdrop-blur-sm border border-primary/20 rounded-lg mt-2 p-4 shadow-lg">
             <div className="flex flex-col space-y-4">
+              {/* Theme toggle for mobile (only visible on very small screens) */}
+              <div className="sm:hidden flex items-center justify-between">
+                <span className="text-sm font-fira text-foreground/80">Theme</span>
+                <div className="flex items-center space-x-1 bg-muted/50 rounded-full p-1 border border-border">
+                  <Sun size={14} className={`transition-colors ${theme === 'light' ? 'text-primary' : 'text-muted-foreground'}`} />
+                  <Switch
+                    checked={theme === 'dark'}
+                    onCheckedChange={toggleTheme}
+                    className="data-[state=checked]:bg-primary data-[state=unchecked]:bg-muted scale-75"
+                  />
+                  <Moon size={14} className={`transition-colors ${theme === 'dark' ? 'text-primary' : 'text-muted-foreground'}`} />
+                </div>
+              </div>
+
+              {/* Navigation Links */}
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="text-foreground/80 hover:text-primary transition-colors font-fira text-sm tracking-wider"
+                  className="text-foreground/80 hover:text-primary transition-colors font-fira text-base tracking-wider py-2 border-b border-border/50 last:border-b-0"
                   onClick={() => setIsOpen(false)}
                 >
                   {link.name}
                 </Link>
               ))}
               
+              {/* Auth Section */}
               {user ? (
-                <>
-                  <div className="border-t border-border pt-4">
-                    <p className="text-sm font-fira text-muted-foreground mb-2">
-                      {profile?.email}
-                    </p>
+                <div className="border-t border-border pt-4 mt-4">
+                  <p className="text-sm font-fira text-muted-foreground mb-3">
+                    Signed in as: {profile?.email}
+                  </p>
+                  <div className="space-y-2">
+                    <button className="block w-full text-left py-2 text-sm font-fira text-foreground/80 hover:text-primary transition-colors">
+                      <User size={16} className="inline mr-2" />
+                      Profile
+                    </button>
                     {isAdmin() && (
                       <Link
                         to="/admin/blog"
@@ -171,21 +193,23 @@ const Navbar = () => {
                         handleSignOut();
                         setIsOpen(false);
                       }}
-                      className="block py-2 text-sm font-fira text-destructive hover:text-destructive/80 transition-colors"
+                      className="block w-full text-left py-2 text-sm font-fira text-destructive hover:text-destructive/80 transition-colors"
                     >
                       <LogOut size={16} className="inline mr-2" />
                       Sign Out
                     </button>
                   </div>
-                </>
+                </div>
               ) : (
-                <Link
-                  to="/auth"
-                  className="text-primary hover:text-primary/80 transition-colors font-fira text-sm"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Sign In
-                </Link>
+                <div className="border-t border-border pt-4 mt-4">
+                  <Link
+                    to="/auth"
+                    className="block text-center py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition-colors font-fira text-sm"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                </div>
               )}
             </div>
           </div>

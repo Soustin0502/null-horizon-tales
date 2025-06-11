@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -12,10 +13,11 @@ interface Testimonial {
   id: string;
   created_at: string;
   name: string;
-  image_url: string;
-  testimonial: string;
-  designation: string;
-  rating: number; // Add rating to interface
+  email: string;
+  feedback: string;
+  position: string;
+  rating: number;
+  approved: boolean;
 }
 
 const TestimonialsSection = () => {
@@ -42,6 +44,7 @@ const TestimonialsSection = () => {
       const { data, error } = await supabase
         .from('testimonials')
         .select('*')
+        .eq('approved', true)
         .order('created_at', { ascending: false })
         .limit(3);
 
@@ -136,7 +139,7 @@ const TestimonialsSection = () => {
                       <div>
                         <h4 className="font-orbitron text-primary">{testimonial.name}</h4>
                         <p className="text-sm text-muted-foreground font-fira">
-                          {testimonial.designation}
+                          {testimonial.position}
                         </p>
                         {/* Add star rating */}
                         <div className="flex items-center mt-1">
@@ -147,7 +150,7 @@ const TestimonialsSection = () => {
                       </div>
                     </div>
                     <p className="text-foreground/80 font-fira text-sm leading-relaxed">
-                      {testimonial.testimonial}
+                      {testimonial.feedback}
                     </p>
                   </Card>
                 </motion.div>
@@ -156,7 +159,7 @@ const TestimonialsSection = () => {
           )}
         </div>
 
-        {/* View All Button - Updated with exact pink color */}
+        {/* View All Button */}
         <div className="text-center">
           <Button 
             asChild 
