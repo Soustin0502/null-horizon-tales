@@ -32,7 +32,7 @@ function App() {
         <AuthProvider>
           <Router>
             <div className="min-h-screen bg-background text-foreground">
-              <LoadingScreen />
+              <LoadingScreen onLoadComplete={() => {}} />
               <Navbar />
               <main>
                 <Routes>
