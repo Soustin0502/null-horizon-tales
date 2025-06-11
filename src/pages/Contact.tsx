@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+// import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -303,7 +303,7 @@ ${data.message}
           </div>
         </div>
       </main>
-      <Footer />
+{/*       <Footer /> */}
     </div>
   );
 };

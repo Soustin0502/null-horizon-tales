@@ -79,8 +79,8 @@ const Blog = () => {
         <div className="container mx-auto px-4 text-center z-10">
           <motion.div 
             ref={titleRef}
-            initial={{ opacity: 1, y: 0 }}
-            animate={titleVisible ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }} // Fixed animation
+            initial={{ opacity: 0, y: 20 }}
+            animate={titleVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl md:text-7xl font-orbitron font-bold mb-6 relative">
@@ -108,13 +108,12 @@ const Blog = () => {
           <motion.div 
             ref={headingRef}
             className="text-center mb-16"
-            initial={{ opacity: 1, y: 0 }}
-            animate={headingVisible ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }} // Fixed animation
+            initial={{ opacity: 0, y: 20 }}
+            animate={headingVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 relative">
               <span className="text-cyber relative z-10">Latest Posts</span>
-{/*               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110 opacity-100 pointer-events-none"></div> */}
               <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110"></div>
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-4"></div>
@@ -239,8 +238,6 @@ const Blog = () => {
           </motion.div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };

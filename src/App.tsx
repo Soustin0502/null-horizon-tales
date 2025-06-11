@@ -1,5 +1,5 @@
 
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
@@ -30,50 +30,48 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
-          <Router>
-            <div className="min-h-screen bg-background text-foreground">
-              <LoadingScreen onLoadComplete={() => {}} />
-              <Navbar />
-              <main>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/members" element={<Members />} />
-                  <Route path="/events" element={<Events />} />
-                  <Route path="/blog" element={<Blog />} />
-                  <Route path="/feedbacks" element={<Feedbacks />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route 
-                    path="/admin/blog" 
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <BlogAdmin />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route 
-                    path="/admin/blog/new" 
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <BlogForm />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route 
-                    path="/admin/blog/edit/:id" 
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <BlogForm />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
-              <Footer />
-              <Toaster />
-            </div>
-          </Router>
+          <div className="min-h-screen bg-background text-foreground">
+            <LoadingScreen onLoadComplete={() => {}} />
+            <Navbar />
+            <main>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/members" element={<Members />} />
+                <Route path="/events" element={<Events />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/feedbacks" element={<Feedbacks />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route 
+                  path="/admin/blog" 
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <BlogAdmin />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/admin/blog/new" 
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <BlogForm />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/admin/blog/edit/:id" 
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <BlogForm />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Footer/>
+            <Toaster />
+          </div>
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>

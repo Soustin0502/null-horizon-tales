@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, MapPin, Users, Clock, ChevronDown, Trophy, Star } from 'lucide-react';
+import { Calendar, MapPin, Users, Clock, ChevronDown, Trophy } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import SkillsDisplay from '@/components/SkillsDisplay';
 import Navbar from '@/components/Navbar';
@@ -12,7 +12,6 @@ const Events = () => {
   const [titleRef, titleVisible] = useScrollAnimation();
   const [statsRef, statsVisible] = useScrollAnimation();
   const [eventsRef, eventsVisible] = useScrollAnimation();
-  const [upcomingRef, upcomingVisible] = useScrollAnimation();
 
   const scrollToNextSection = () => {
     const eventsSection = document.querySelector('#events-stats');
@@ -112,7 +111,7 @@ const Events = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Navbar />
       
       {/* Hero Section */}
@@ -184,15 +183,12 @@ const Events = () => {
           </div>
 
           {/* Upcoming Events */}
-          <div 
-            ref={upcomingRef}
-            className={`text-center mb-16 scroll-fade-in ${upcomingVisible ? 'animate' : ''}`}
-          >
-            <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary">
-              Upcoming Events
+          <div className="text-center mb-16 relative">
+            <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 relative inline-block">
+              <span className="text-cyber relative z-10">Upcoming Events</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-[100px] scale-150" />
             </h2>
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110"></div>
-            <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-4"></div>
           </div>
 
           <div 
@@ -262,14 +258,12 @@ const Events = () => {
           </div>
 
           {/* Past Events */}
-          <div
-            ref={upcomingRef}
-            className={`text-center mb-16 scroll-fade-in ${upcomingVisible ? 'animate' : ''}`}>
-            <h3 className="text-2xl md:text-4xl font-orbitron font-bold mb-4 text-primary">
-              Past Events
+          <div className="text-center mb-16 relative">
+            <h3 className="text-2xl md:text-4xl font-orbitron font-bold mb-4 relative inline-block">
+              <span className="text-cyber relative z-10">Past Events</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-[100px] scale-150" />
             </h3>
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 blur-xl -z-10 scale-110"></div>
-            <div className="w-16 h-1 bg-gradient-to-r from-secondary to-accent mx-auto"></div>
+            <div className="w-16 h-1 bg-gradient-to-r from-secondary to-accent mx-auto mt-4"></div>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

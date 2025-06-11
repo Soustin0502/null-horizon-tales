@@ -7,7 +7,7 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { supabase } from '@/integrations/supabase/client';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+// import Footer from '@/components/Footer';
 import FeedbackForm from '@/components/FeedbackForm';
 
 interface Testimonial {
@@ -21,7 +21,7 @@ interface Testimonial {
 
 const Feedbacks = () => {
   const [titleRef, titleVisible] = useScrollAnimation();
-  const [feedbacksRef, feedbacksVisible] = useScrollAnimation();
+  const [feedbacksRef, feedbacksVisible] = useScrollAnimation(0.1, '0px', true);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [formHeadingRef, formHeadingVisible] = useScrollAnimation(0.2);
@@ -74,7 +74,7 @@ const Feedbacks = () => {
           <motion.div 
             ref={titleRef}
             initial={{ opacity: 0, y: 20 }}
-            animate={titleVisible ? { opacity: 1, y: 0 } : {}}
+            animate={titleVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl md:text-7xl font-orbitron font-bold mb-6 relative">
@@ -102,7 +102,7 @@ const Feedbacks = () => {
           <motion.div 
             ref={feedbacksRef}
             initial={{ opacity: 0, y: 20 }}
-            animate={feedbacksVisible ? { opacity: 1, y: 0 } : {}}
+            animate={feedbacksVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
@@ -134,24 +134,15 @@ const Feedbacks = () => {
           ) : (
             <motion.div 
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-              variants={{
-                hidden: {},
-                visible: {
-                  transition: {
-                    staggerChildren: 0.1
-                  }
-                }
-              }}
-              initial="hidden"
-              animate={feedbacksVisible ? "visible" : "hidden"}
+              initial={{ opacity: 0 }}
+              animate={feedbacksVisible ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ duration: 0.6, staggerChildren: 0.1 }}
             >
               {testimonials.map((testimonial) => (
                 <motion.div
                   key={testimonial.id}
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={feedbacksVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                   transition={{ duration: 0.5 }}
                 >
                   <Card className="bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 h-full">
@@ -213,7 +204,7 @@ const Feedbacks = () => {
         </div>
       </section>
 
-      <Footer />
+{/*       <Footer /> */}
     </div>
   );
 };

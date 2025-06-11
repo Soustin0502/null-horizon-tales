@@ -19,7 +19,7 @@ interface Testimonial {
 }
 
 const FeedbacksSection = () => {
-  const [sectionRef, sectionVisible] = useScrollAnimation();
+  const [sectionRef, sectionVisible] = useScrollAnimation(0.1, '0px', true);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -85,7 +85,10 @@ const FeedbacksSection = () => {
       <div className="container mx-auto px-4">
         <motion.div 
           ref={sectionRef}
-          className={`text-center mb-16 scroll-fade-in ${sectionVisible ? 'animate' : ''}`}
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={sectionVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6 }}
         >
           <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 relative">
             <span className="text-cyber relative z-10">Community Feedbacks</span>
@@ -127,25 +130,15 @@ const FeedbacksSection = () => {
           ) : (
             <motion.div
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: {
-                    staggerChildren: 0.1
-                  }
-                }
-              }}
-              initial="hidden"
-              animate={sectionVisible ? "visible" : "hidden"}
+              initial={{ opacity: 0 }}
+              animate={sectionVisible ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ duration: 0.6, staggerChildren: 0.1 }}
             >
               {testimonials.map((testimonial, index) => (
                 <motion.div
                   key={testimonial.id}
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 }
-                  }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={sectionVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                   <Card className="bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 p-6">

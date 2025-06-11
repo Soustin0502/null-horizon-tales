@@ -5,7 +5,7 @@ import { Github, Linkedin, Mail, ChevronDown, Users, Calendar } from 'lucide-rea
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import SkillsDisplay from '@/components/SkillsDisplay';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+// import Footer from '@/components/Footer';
 
 const Members = () => {
   const [titleRef, titleVisible] = useScrollAnimation();
@@ -255,7 +255,7 @@ const Members = () => {
         </div>
       </section>
 
-      <Footer />
+{/*       <Footer /> */}
     </div>
   );
 };
