@@ -3,12 +3,21 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Menu, X, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon, User, LogOut, Shield } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const { user, profile, signOut, isAdmin } = useAuth();
 
   const navLinks = [
     { name: 'Home', href: '/' },
@@ -18,6 +27,14 @@ const Navbar = () => {
     { name: 'Feedbacks', href: '/feedbacks' },
     { name: 'Contact', href: '/contact' }
   ];
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-md border-b border-primary/20">
@@ -45,7 +62,7 @@ const Navbar = () => {
               </Link>
             ))}
             
-            {/* Theme Toggle - Pill Shape */}
+            {/* Theme Toggle */}
             <div className="flex items-center space-x-2 bg-muted/50 rounded-full p-1 border border-border">
               <Sun size={16} className={`transition-colors ${theme === 'light' ? 'text-primary' : 'text-muted-foreground'}`} />
               <Switch
@@ -55,6 +72,44 @@ const Navbar = () => {
               />
               <Moon size={16} className={`transition-colors ${theme === 'dark' ? 'text-primary' : 'text-muted-foreground'}`} />
             </div>
+
+            {/* Auth Controls */}
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                    <User size={16} />
+                    <span className="font-fira text-sm">{profile?.email?.split('@')[0] || 'User'}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem className="font-fira">
+                    <User size={16} className="mr-2" />
+                    Profile
+                  </DropdownMenuItem>
+                  {isAdmin() && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild className="font-fira">
+                        <Link to="/admin/blog">
+                          <Shield size={16} className="mr-2" />
+                          Admin Panel
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="font-fira text-destructive">
+                    <LogOut size={16} className="mr-2" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button asChild variant="outline" size="sm" className="font-fira">
+                <Link to="/auth">Sign In</Link>
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -94,6 +149,44 @@ const Navbar = () => {
                   {link.name}
                 </Link>
               ))}
+              
+              {user ? (
+                <>
+                  <div className="border-t border-border pt-4">
+                    <p className="text-sm font-fira text-muted-foreground mb-2">
+                      {profile?.email}
+                    </p>
+                    {isAdmin() && (
+                      <Link
+                        to="/admin/blog"
+                        className="block py-2 text-sm font-fira text-foreground/80 hover:text-primary transition-colors"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <Shield size={16} className="inline mr-2" />
+                        Admin Panel
+                      </Link>
+                    )}
+                    <button
+                      onClick={() => {
+                        handleSignOut();
+                        setIsOpen(false);
+                      }}
+                      className="block py-2 text-sm font-fira text-destructive hover:text-destructive/80 transition-colors"
+                    >
+                      <LogOut size={16} className="inline mr-2" />
+                      Sign Out
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <Link
+                  to="/auth"
+                  className="text-primary hover:text-primary/80 transition-colors font-fira text-sm"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Sign In
+                </Link>
+              )}
             </div>
           </div>
         )}
