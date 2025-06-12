@@ -1,10 +1,13 @@
 
 import { useState, useEffect } from 'react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import FeedbackForm from '@/components/FeedbackForm';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Star, User, Calendar, ChevronDown } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { Card } from '@/components/ui/card';
+import Navbar from '@/components/Navbar';
+import FeedbackForm from '@/components/FeedbackForm';
+import Footer from '@/components/Footer';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { gsap } from 'gsap';
 import { useGSAPScrollTrigger } from '@/hooks/useGSAPAnimation';
@@ -12,42 +15,56 @@ import { useGSAPScrollTrigger } from '@/hooks/useGSAPAnimation';
 interface Testimonial {
   id: string;
   name: string;
+  position?: string;
   feedback: string;
   rating?: number;
-  position?: string;
   created_at: string;
-  approved: boolean;
-  email?: string;
 }
 
 const Feedbacks = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
+  const [displayCount, setDisplayCount] = useState(4);
 
-  // Hero section animation
-  const heroRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
-    const cards = element.querySelectorAll('.hero-card');
-    
-    gsap.fromTo(cards,
+  // Hero title animation
+  const titleRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
+    gsap.fromTo(element,
       {
         opacity: 0,
         y: 60,
+        scale: 0.8
+      },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1.2,
+        ease: "power3.out"
+      }
+    );
+  }, { start: "top 80%" });
+
+  // Feedbacks section animation
+  const feedbacksRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
+    gsap.fromTo(element,
+      {
+        opacity: 0,
+        y: 50,
         scale: 0.9
       },
       {
         opacity: 1,
         y: 0,
         scale: 1,
-        duration: 0.8,
-        stagger: 0.2,
+        duration: 1,
         ease: "back.out(1.7)"
       }
     );
   }, { start: "top 80%" });
 
-  // Main content animation
-  const contentRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
-    const cards = element.querySelectorAll('.feedback-card');
+  // Cards animation
+  const cardsRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
+    const cards = element.querySelectorAll('.testimonial-card');
     
     gsap.fromTo(cards,
       {
@@ -62,11 +79,27 @@ const Feedbacks = () => {
         rotationX: 0,
         scale: 1,
         duration: 0.6,
-        stagger: 0.2,
+        stagger: 0.1,
         ease: "back.out(1.7)"
       }
     );
   }, { start: "top 75%" });
+
+  // Form heading animation
+  const formHeadingRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
+    gsap.fromTo(element,
+      {
+        opacity: 0,
+        y: 50
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      }
+    );
+  }, { start: "top 80%" });
 
   const getInitials = (name: string) => {
     return name
@@ -76,22 +109,66 @@ const Feedbacks = () => {
       .toUpperCase();
   };
 
+  // Calculate initial display count based on screen width
+  useEffect(() => {
+    const calculateInitialCount = () => {
+      const screenWidth = window.innerWidth;
+      let itemsPerRow;
+      
+      if (screenWidth >= 1280) { // xl
+        itemsPerRow = 4;
+      } else if (screenWidth >= 1024) { // lg
+        itemsPerRow = 3;
+      } else if (screenWidth >= 768) { // md
+        itemsPerRow = 2;
+      } else {
+        itemsPerRow = 1;
+      }
+      
+      setDisplayCount(itemsPerRow);
+    };
+
+    calculateInitialCount();
+    
+    const handleResize = () => {
+      calculateInitialCount();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     fetchTestimonials();
   }, []);
 
   const fetchTestimonials = async () => {
     try {
+      console.log('Fetching testimonials for Feedbacks page...');
+      
       const { data, error } = await supabase
         .from('testimonials')
         .select('*')
         .eq('approved', true)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      setTestimonials(data || []);
+      console.log('Supabase response for feedbacks page:', { data, error });
+
+      if (error) {
+        console.error('Error fetching testimonials:', error);
+        throw error;
+      }
+      
+      if (data) {
+        console.log('Testimonials fetched for feedbacks page:', data);
+        setTestimonials(data);
+      } else {
+        console.log('No testimonials data received');
+        setTestimonials([]);
+      }
     } catch (error) {
-      console.error('Error fetching testimonials:', error);
+      console.error('Error in fetchTestimonials:', error);
+      setTestimonials([]);
     } finally {
       setLoading(false);
     }
@@ -99,55 +176,107 @@ const Feedbacks = () => {
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
-      <span
+      <Star
         key={i}
-        className={i < rating ? 'text-yellow-400' : 'text-gray-300'}
-      >
-        ★
-      </span>
+        size={16}
+        className={i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}
+      />
     ));
   };
 
+  const scrollToNextSection = () => {
+    const testimonialSection = document.getElementById('testimonials');
+    if (testimonialSection) {
+      gsap.to(window, {
+        duration: 1.5,
+        scrollTo: { y: testimonialSection, offsetY: 0 },
+        ease: "power2.inOut"
+      });
+    }
+  };
+
+  const loadMore = () => {
+    const screenWidth = window.innerWidth;
+    let itemsPerRow;
+    
+    if (screenWidth >= 1280) { // xl
+      itemsPerRow = 4;
+    } else if (screenWidth >= 1024) { // lg
+      itemsPerRow = 3;
+    } else if (screenWidth >= 768) { // md
+      itemsPerRow = 2;
+    } else {
+      itemsPerRow = 1;
+    }
+    
+    setDisplayCount(prev => prev + itemsPerRow);
+  };
+
+  const displayedTestimonials = testimonials.slice(0, displayCount);
+  console.log('Displayed testimonials:', displayedTestimonials);
+  const hasMore = testimonials.length > displayCount;
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Navbar />
       
       {/* Hero Section */}
-      <section ref={heroRef} className="py-20 bg-transparent">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h1 className="hero-card text-4xl md:text-6xl font-orbitron font-bold mb-4 relative heading-glow">
-              <span className="text-cyber relative z-10">Community Feedbacks</span>
+      <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div className="container mx-auto px-4 text-center z-10">
+          <div 
+            ref={titleRef}
+            className="mb-8"
+          >
+            <h1 className="text-4xl md:text-7xl font-orbitron font-bold mb-6 relative heading-glow">
+              <span className="text-cyber relative z-10">Feedbacks</span>
             </h1>
-            <div className="hero-card w-32 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-6"></div>
-            <p className="hero-card text-xl font-fira text-foreground/80 max-w-3xl mx-auto">
-              Discover what our community members have to say about their journey with WarP Computer Club.
+            <p className="text-xl font-fira text-foreground/80 max-w-3xl mx-auto mb-8">
+              See what our community members say about WarP Computer Club
             </p>
           </div>
         </div>
+
+        <button 
+          onClick={scrollToNextSection}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer bg-transparent border-none"
+          aria-label="Scroll to next section"
+        >
+          <ChevronDown className="text-primary" size={24} />
+        </button>
       </section>
 
-      {/* Feedbacks Grid */}
-      <section ref={contentRef} className="py-20">
+      {/* Testimonials Section */}
+      <section id="testimonials" className="py-20 relative z-10">
         <div className="container mx-auto px-4">
+          <div 
+            ref={feedbacksRef}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary relative heading-glow">
+              <span className="text-cyber relative z-10">Community Feedbacks</span>
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto"></div>
+          </div>
+
           {loading ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(6)].map((_, i) => (
-                <Card key={i} className="feedback-card bg-card/50 cyber-border animate-pulse p-6 h-80">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-full bg-muted"></div>
-                    <div className="flex-1">
-                      <div className="h-4 bg-muted rounded w-24 mb-2"></div>
-                      <div className="h-3 bg-muted rounded w-16"></div>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="h-4 bg-muted rounded"></div>
-                    <div className="h-4 bg-muted rounded"></div>
-                    <div className="h-4 bg-muted rounded w-3/4"></div>
-                  </div>
-                </Card>
-              ))}
+            <div className="flex justify-center">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl w-full">
+                {[...Array(4)].map((_, i) => (
+                  <Card key={i} className="bg-card/50 cyber-border animate-pulse h-80 card-glossy-glow">
+                    <CardHeader>
+                      <div className="h-6 bg-muted rounded w-3/4"></div>
+                      <div className="h-4 bg-muted rounded w-1/2"></div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div className="h-4 bg-muted rounded"></div>
+                        <div className="h-4 bg-muted rounded"></div>
+                        <div className="h-4 bg-muted rounded w-3/4"></div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
           ) : testimonials.length === 0 ? (
             <div className="text-center py-12">
@@ -156,54 +285,79 @@ const Feedbacks = () => {
               </p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {testimonials.map((testimonial) => (
-                <Card
-                  key={testimonial.id}
-                  className="feedback-card bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 p-6 h-80 flex flex-col"
+            <>
+              <div className="flex justify-center">
+                <div 
+                  ref={cardsRef}
+                  className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl w-full"
                 >
-                  <div className="flex items-center gap-4 mb-4">
-                    <Avatar className="w-12 h-12 bg-primary/20 flex-shrink-0">
-                      <AvatarFallback className="bg-primary/20 text-primary font-medium">
-                        {getInitials(testimonial.name)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-orbitron text-primary truncate">{testimonial.name}</h4>
-                      {testimonial.position && (
-                        <p className="text-sm text-muted-foreground font-fira truncate">
-                          {testimonial.position}
-                        </p>
-                      )}
-                      {testimonial.rating && (
-                        <div className="flex items-center mt-1">
-                          {renderStars(testimonial.rating)}
-                        </div>
-                      )}
+                  {displayedTestimonials.map((testimonial) => (
+                    <div key={testimonial.id}>
+                      <Card className="testimonial-card bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 h-80 card-glossy-glow">
+                        <CardHeader>
+                          <div className="flex items-center justify-between">
+                            <CardTitle className="text-lg font-orbitron text-primary">
+                              {testimonial.name}
+                            </CardTitle>
+                            {testimonial.rating && (
+                              <div className="flex gap-1">
+                                {renderStars(testimonial.rating)}
+                              </div>
+                            )}
+                          </div>
+                          {testimonial.position && (
+                            <Badge variant="outline" className="w-fit">
+                              {testimonial.position}
+                            </Badge>
+                          )}
+                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <Calendar size={14} />
+                            <span className="font-fira">
+                              {new Date(testimonial.created_at).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </CardHeader>
+
+                        <CardContent>
+                          <p className="text-foreground/80 font-fira text-sm leading-relaxed">
+                            "{testimonial.feedback}"
+                          </p>
+                        </CardContent>
+                      </Card>
                     </div>
-                  </div>
-                  <p className="text-foreground/80 font-fira text-sm leading-relaxed flex-1 overflow-hidden">
-                    "{testimonial.feedback}"
-                  </p>
-                </Card>
-              ))}
-            </div>
+                  ))}
+                </div>
+              </div>
+
+              {hasMore && (
+                <div className="text-center mt-12">
+                  <Button 
+                    onClick={loadMore}
+                    className="bg-primary hover:bg-primary/80 text-primary-foreground font-fira"
+                  >
+                    Load More Feedbacks
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
 
-      {/* Feedback Form */}
-      <section className="py-20 bg-muted/5">
+      {/* Feedback Form Section */}
+      <section className="py-20">
         <div className="container mx-auto px-4">
+          <div 
+            ref={formHeadingRef}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 relative heading-glow">
+              <span className="text-cyber relative z-10">Give your Feedback</span>
+            </h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-6"></div>
+          </div>
+          
           <div className="max-w-2xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-orbitron font-bold mb-4 text-primary">
-                Share Your Experience
-              </h2>
-              <p className="text-lg font-fira text-foreground/80">
-                Help us improve and inspire others by sharing your feedback about WarP Computer Club.
-              </p>
-            </div>
             <FeedbackForm />
           </div>
         </div>
