@@ -15,9 +15,11 @@ export const useGSAPAnimation = <T extends HTMLElement = HTMLDivElement>(
     if (ref.current) {
       const tl = animation(ref.current);
       return () => {
-        if (tl) {
+        // Only call kill if tl exists and has the kill method
+        if (tl && typeof tl.kill === 'function') {
           tl.kill();
         }
+        // Clean up ScrollTriggers
         ScrollTrigger.getAll().forEach(trigger => {
           if (trigger.vars.trigger === ref.current) {
             trigger.kill();
@@ -40,7 +42,7 @@ export const useGSAPTimeline = (
     timelineRef.current = createTimeline();
     
     return () => {
-      if (timelineRef.current) {
+      if (timelineRef.current && typeof timelineRef.current.kill === 'function') {
         timelineRef.current.kill();
       }
     };
