@@ -125,13 +125,9 @@ const AboutSection = () => {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div ref={contentRef} className="space-y-6">
             <div 
-              className="content-card bg-card cyber-border rounded-lg p-6 card-glossy-glow"
+              className="content-card bg-card cyber-border rounded-lg p-6"
               onMouseMove={(e) => handleCardMouseMove(e, 0)}
               onMouseLeave={handleCardMouseLeave}
-              style={{
-                '--mouse-x': hoveredCard === 0 ? `${mousePosition.x}px` : '50%',
-                '--mouse-y': hoveredCard === 0 ? `${mousePosition.y}px` : '50%',
-              } as React.CSSProperties}
             >
               <h3 className="text-xl font-orbitron font-semibold text-primary mb-4">
                 Our Mission
@@ -144,13 +140,9 @@ const AboutSection = () => {
             </div>
 
             <div 
-              className="content-card bg-card cyber-border rounded-lg p-6 card-glossy-glow"
+              className="content-card bg-card cyber-border rounded-lg p-6"
               onMouseMove={(e) => handleCardMouseMove(e, 1)}
               onMouseLeave={handleCardMouseLeave}
-              style={{
-                '--mouse-x': hoveredCard === 1 ? `${mousePosition.x}px` : '50%',
-                '--mouse-y': hoveredCard === 1 ? `${mousePosition.y}px` : '50%',
-              } as React.CSSProperties}
             >
               <h3 className="text-xl font-orbitron font-semibold text-secondary mb-4">
                 What We Do
@@ -165,13 +157,9 @@ const AboutSection = () => {
 
           <div ref={statsRef} className="space-y-4">
             <Card 
-              className="stat-card bg-card/50 cyber-border hover:glow-green transition-all duration-300 card-glossy-glow"
+              className="stat-card bg-card/50 cyber-border hover:glow-green transition-all duration-300"
               onMouseMove={(e) => handleCardMouseMove(e, 2)}
               onMouseLeave={handleCardMouseLeave}
-              style={{
-                '--mouse-x': hoveredCard === 2 ? `${mousePosition.x}px` : '50%',
-                '--mouse-y': hoveredCard === 2 ? `${mousePosition.y}px` : '50%',
-              } as React.CSSProperties}
             >
               <CardContent className="p-6">
                 <div className="text-3xl font-orbitron font-bold text-primary mb-2">75+</div>
@@ -180,13 +168,9 @@ const AboutSection = () => {
             </Card>
 
             <Card 
-              className="stat-card bg-card/50 cyber-border hover:glow-blue transition-all duration-300 card-glossy-glow"
+              className="stat-card bg-card/50 cyber-border hover:glow-blue transition-all duration-300"
               onMouseMove={(e) => handleCardMouseMove(e, 3)}
               onMouseLeave={handleCardMouseLeave}
-              style={{
-                '--mouse-x': hoveredCard === 3 ? `${mousePosition.x}px` : '50%',
-                '--mouse-y': hoveredCard === 3 ? `${mousePosition.y}px` : '50%',
-              } as React.CSSProperties}
             >
               <CardContent className="p-6">
                 <div className="text-3xl font-orbitron font-bold text-secondary mb-2">5</div>
@@ -195,13 +179,9 @@ const AboutSection = () => {
             </Card>
 
             <Card 
-              className="stat-card bg-card/50 cyber-border hover:glow-green transition-all duration-300 card-glossy-glow"
+              className="stat-card bg-card/50 cyber-border hover:glow-green transition-all duration-300"
               onMouseMove={(e) => handleCardMouseMove(e, 4)}
               onMouseLeave={handleCardMouseLeave}
-              style={{
-                '--mouse-x': hoveredCard === 4 ? `${mousePosition.x}px` : '50%',
-                '--mouse-y': hoveredCard === 4 ? `${mousePosition.y}px` : '50%',
-              } as React.CSSProperties}
             >
               <CardContent className="p-6">
                 <div className="text-3xl font-orbitron font-bold text-accent mb-2">2</div>

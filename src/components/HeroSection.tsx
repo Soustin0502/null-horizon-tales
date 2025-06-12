@@ -11,7 +11,6 @@ gsap.registerPlugin(TextPlugin);
 
 const HeroSection = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [logoPosition, setLogoPosition] = useState({ x: 0, y: 0 });
 
   // GSAP Timeline for entrance animations
   const createEntranceTimeline = () => {
@@ -71,7 +70,7 @@ const HeroSection = () => {
 
   const timeline = useGSAPTimeline(createEntranceTimeline, []);
 
-  // Enhanced logo hover animation
+  // Enhanced 3D perspective logo animation
   const logoRef = useGSAPAnimation<HTMLDivElement>((element) => {
     const handleMouseMove = (e: MouseEvent) => {
       const rect = element.getBoundingClientRect();
@@ -81,30 +80,43 @@ const HeroSection = () => {
       const deltaX = e.clientX - centerX;
       const deltaY = e.clientY - centerY;
       
-      const maxDistance = 30;
+      const maxDistance = 100;
       const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
       
       if (distance > 0) {
         const normalizedX = deltaX / distance;
         const normalizedY = deltaY / distance;
         
-        const moveDistance = Math.min(distance * 0.4, maxDistance);
+        const moveDistance = Math.min(distance * 0.3, maxDistance);
+        
+        // 3D perspective with tilt
+        const rotationY = normalizedX * 15; // Rotate on Y axis
+        const rotationX = -normalizedY * 15; // Rotate on X axis
+        const translateZ = moveDistance * 0.5; // Move towards viewer
         
         gsap.to(element.querySelector('.hero-logo'), {
-          x: -normalizedX * moveDistance,
-          y: -normalizedY * moveDistance,
+          rotationY: rotationY,
+          rotationX: rotationX,
+          z: translateZ,
+          x: -normalizedX * moveDistance * 0.5,
+          y: -normalizedY * moveDistance * 0.5,
           duration: 0.6,
-          ease: "power2.out"
+          ease: "power2.out",
+          transformPerspective: 1000
         });
       }
     };
 
     const handleMouseLeave = () => {
       gsap.to(element.querySelector('.hero-logo'), {
+        rotationY: 0,
+        rotationX: 0,
+        z: 0,
         x: 0,
         y: 0,
         duration: 0.8,
-        ease: "elastic.out(1, 0.3)"
+        ease: "elastic.out(1, 0.3)",
+        transformPerspective: 1000
       });
     };
 
@@ -194,11 +206,13 @@ const HeroSection = () => {
           <div 
             ref={logoRef}
             className="mb-6 inline-block relative"
+            style={{ perspective: '1000px' }}
           >
             <img 
               src="./WARP TEXT HORIZ.png" 
               alt="WarP Logo" 
               className="hero-logo h-24 md:h-32 mx-auto transition-transform duration-300 ease-out relative z-0"
+              style={{ transformStyle: 'preserve-3d' }}
             />
           </div>
           

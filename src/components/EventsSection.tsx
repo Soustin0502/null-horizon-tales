@@ -8,6 +8,7 @@ import { Calendar, User, ArrowRight } from 'lucide-react';
 import { gsap } from 'gsap';
 import { TextPlugin } from 'gsap/TextPlugin';
 import { useGSAPScrollTrigger } from '@/hooks/useGSAPAnimation';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 gsap.registerPlugin(TextPlugin);
 
@@ -15,58 +16,12 @@ const EventsSection = () => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [blogPosts, setBlogPosts] = useState<any[]>([]);
-
-  // Title animation
-  const titleRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
-    gsap.fromTo(element,
-      {
-        opacity: 0,
-        y: 60,
-        scale: 0.8
-      },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 1.2,
-        ease: "power3.out"
-      }
-    );
-  }, { start: "top 80%" });
-
-  // Events cards with morphing and floating effects
-  const eventsRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
-    const cards = element.querySelectorAll('.event-card');
-    
-    gsap.fromTo(cards,
-      {
-        opacity: 0,
-        y: 100,
-        rotationY: 30,
-        scale: 0.8
-      },
-      {
-        opacity: 1,
-        y: 0,
-        rotationY: 0,
-        scale: 1,
-        duration: 0.8,
-        stagger: 0.3,
-        ease: "back.out(1.7)"
-      }
-    );
-
-    // Add floating animation
-    cards.forEach((card, index) => {
-      gsap.to(card, {
-        y: "+=10",
-        duration: 2 + index * 0.5,
-        repeat: -1,
-        yoyo: true,
-        ease: "power1.inOut"
-      });
-    });
-  }, { start: "top 70%" });
+  
+  // Use original scroll animation for title
+  const [titleRef, titleVisible] = useScrollAnimation(0.1, '0px', true);
+  
+  // Use original scroll animation for events cards
+  const [eventsRef, eventsVisible] = useScrollAnimation(0.1, '0px', true);
 
   // Terminal typing animation for events schedule
   const terminalRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
@@ -74,7 +29,7 @@ const EventsSection = () => {
     const infoElements = element.querySelectorAll('.terminal-info');
     
     // Initial setup
-    gsap.set(element, { opacity: 0, x: 100 });
+    gsap.set(element, { opacity: 0, y: 20 });
     gsap.set(commandElement, { text: "" });
     gsap.set(infoElements, { opacity: 0 });
     
@@ -83,7 +38,7 @@ const EventsSection = () => {
     // Slide in terminal
     tl.to(element, {
       opacity: 1,
-      x: 0,
+      y: 0,
       duration: 0.6,
       ease: "power2.out"
     })
@@ -103,45 +58,10 @@ const EventsSection = () => {
   }, { start: "top 80%" });
 
   // Blog section animation
-  const blogRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
-    gsap.fromTo(element,
-      {
-        opacity: 0,
-        y: 60,
-        scale: 0.9
-      },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 1,
-        ease: "power3.out"
-      }
-    );
-  }, { start: "top 80%" });
+  const [blogRef, blogVisible] = useScrollAnimation(0.1, '0px', true);
 
   // Latest Posts animation
-  const postsRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
-    const cards = element.querySelectorAll('.blog-card');
-    
-    gsap.fromTo(cards,
-      {
-        opacity: 0,
-        y: 80,
-        rotationX: 45,
-        scale: 0.8
-      },
-      {
-        opacity: 1,
-        y: 0,
-        rotationX: 0,
-        scale: 1,
-        duration: 0.6,
-        stagger: 0.2,
-        ease: "back.out(1.7)"
-      }
-    );
-  }, { start: "top 75%" });
+  const [postsRef, postsVisible] = useScrollAnimation(0.1, '0px', true);
 
   // Blog terminal animation
   const blogTerminalRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
@@ -149,7 +69,7 @@ const EventsSection = () => {
     const infoElements = element.querySelectorAll('.blog-terminal-info');
     
     // Initial setup
-    gsap.set(element, { opacity: 0, x: -100 });
+    gsap.set(element, { opacity: 0, y: 20 });
     gsap.set(commandElement, { text: "" });
     gsap.set(infoElements, { opacity: 0 });
     
@@ -158,7 +78,7 @@ const EventsSection = () => {
     // Slide in terminal
     tl.to(element, {
       opacity: 1,
-      x: 0,
+      y: 0,
       duration: 0.6,
       ease: "power2.out"
     })
@@ -270,7 +190,7 @@ const EventsSection = () => {
         <div className="container mx-auto px-4">
             <div 
             ref={titleRef}
-            className="text-center mb-16"
+            className={`text-center mb-16 scroll-fade-in ${titleVisible ? 'animate' : ''}`}
             >
                 <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 relative title-glow">
                     <span className="text-cyber relative z-10">Our Events</span>
@@ -283,23 +203,14 @@ const EventsSection = () => {
 
             <div 
             ref={eventsRef}
-            className="relative max-w-6xl mx-auto events-container items-center"
+            className={`grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12 scroll-fade-in ${eventsVisible ? 'animate' : ''}`}
             >
                 {events.map((event, index) => (
                     <Card 
                     key={index} 
-                    className={`
-                        event-card bg-card cyber-border transition-all duration-300 group
-                        ${index === 0 ? 'event-card-1' : 'event-card-2'}
-                        ${hoveredCard === index ? 'z-20' : ''}
-                        ${hoveredCard !== null && hoveredCard !== index ? 'adjacent-glow' : ''}
-                    `}
+                    className="bg-card cyber-border transition-all duration-300 group"
                     onMouseMove={(e) => handleCardMouseMove(e, index)}
                     onMouseLeave={handleCardMouseLeave}
-                    style={{
-                        '--mouse-x': hoveredCard === index ? `${mousePosition.x}px` : '50%',
-                        '--mouse-y': hoveredCard === index ? `${mousePosition.y}px` : '50%',
-                    } as React.CSSProperties}
                     >
                         <CardHeader>
                             <div className={`inline-block px-3 py-1 rounded-full text-xs font-fira uppercase tracking-wider mb-2 ${
@@ -368,7 +279,7 @@ const EventsSection = () => {
             {/* Latest Posts Section */}
             <div 
             ref={blogRef}
-            className="text-center mb-16"
+            className={`text-center mb-16 scroll-fade-in ${blogVisible ? 'animate' : ''}`}
             >
                 <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 relative title-glow">
                     <span className="text-cyber relative z-10">Latest Posts</span>
@@ -380,9 +291,12 @@ const EventsSection = () => {
             </div>
 
             <div className="flex justify-center">
-                <div ref={postsRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full justify-items-center items-center">
+                <div 
+                ref={postsRef}
+                className={`grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full justify-items-center items-center scroll-fade-in ${postsVisible ? 'animate' : ''}`}
+                >
                     {blogPosts.length > 0 ? blogPosts.map((post, index) => (
-                        <Card key={post.id} className="blog-card bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 w-full max-w-md card-glossy-glow">
+                        <Card key={post.id} className="bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 w-full max-w-md">
                             <CardHeader className="pb-3 text-center">
                                 <div className={`inline-block px-2 py-1 rounded-full text-xs font-fira uppercase tracking-wider mb-2 border ${getCategoryColor(post.category)}`}>
                                     {post.category}
@@ -428,7 +342,6 @@ const EventsSection = () => {
                     <div className="blog-terminal-command text-primary mb-2"></div>
                     <div className="text-muted-foreground text-sm">
                         <div className="blog-terminal-info">Total Posts: {blogPosts.length}</div>
-                        <div className="blog-terminal-info">Categories: Tech, Events, Announcements</div>
                         <div className="blog-terminal-info">Status: ✓ Regularly Updated</div>
                     </div>
                 </div>
