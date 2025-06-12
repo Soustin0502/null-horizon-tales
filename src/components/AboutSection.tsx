@@ -26,7 +26,7 @@ const AboutSection = () => {
     );
   }, { start: "top 80%" });
 
-  // Content cards animation
+  // Content cards animation with 3D transforms
   const contentRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
     const cards = element.querySelectorAll('.content-card');
     
@@ -34,12 +34,16 @@ const AboutSection = () => {
       {
         opacity: 0,
         x: -100,
-        rotationY: -15
+        rotationY: -15,
+        rotationX: 10,
+        z: -100
       },
       {
         opacity: 1,
         x: 0,
         rotationY: 0,
+        rotationX: 0,
+        z: 0,
         duration: 0.8,
         stagger: 0.3,
         ease: "power2.out"
@@ -47,7 +51,7 @@ const AboutSection = () => {
     );
   }, { start: "top 70%" });
 
-  // Stats cards animation
+  // Stats cards animation with enhanced 3D effects
   const statsRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
     const statCards = element.querySelectorAll('.stat-card');
     
@@ -56,13 +60,15 @@ const AboutSection = () => {
         opacity: 0,
         y: 80,
         scale: 0.8,
-        rotationX: 45
+        rotationX: 45,
+        rotationY: 15
       },
       {
         opacity: 1,
         y: 0,
         scale: 1,
         rotationX: 0,
+        rotationY: 0,
         duration: 0.6,
         stagger: 0.2,
         ease: "back.out(1.7)"
@@ -78,11 +84,12 @@ const AboutSection = () => {
     });
     setHoveredCard(index);
 
-    // GSAP hover effect
+    // Enhanced GSAP hover effect with 3D transforms
     gsap.to(e.currentTarget, {
       rotationY: 5,
       rotationX: 2,
       scale: 1.02,
+      z: 50,
       duration: 0.3,
       ease: "power2.out"
     });
@@ -96,6 +103,7 @@ const AboutSection = () => {
       rotationY: 0,
       rotationX: 0,
       scale: 1,
+      z: 0,
       duration: 0.5,
       ease: "elastic.out(1, 0.3)"
     });

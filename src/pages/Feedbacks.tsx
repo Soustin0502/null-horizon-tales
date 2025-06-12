@@ -1,14 +1,16 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Star, User, Calendar, ChevronDown } from 'lucide-react';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
 import FeedbackForm from '@/components/FeedbackForm';
 import Footer from '@/components/Footer';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { gsap } from 'gsap';
+import { useGSAPScrollTrigger } from '@/hooks/useGSAPAnimation';
 
 interface Testimonial {
   id: string;
@@ -20,13 +22,84 @@ interface Testimonial {
 }
 
 const Feedbacks = () => {
-  const [titleRef, titleVisible] = useScrollAnimation();
-  const [feedbacksRef, feedbacksVisible] = useScrollAnimation(0.1, '0px', true);
-  const [cardsRef, cardsVisible] = useScrollAnimation(0.1, '0px', true);
-  const [formHeadingRef, formHeadingVisible] = useScrollAnimation(0.2);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
   const [displayCount, setDisplayCount] = useState(4);
+
+  // Hero title animation
+  const titleRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
+    gsap.fromTo(element,
+      {
+        opacity: 0,
+        y: 60,
+        scale: 0.8
+      },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1.2,
+        ease: "power3.out"
+      }
+    );
+  }, { start: "top 80%" });
+
+  // Feedbacks section animation
+  const feedbacksRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
+    gsap.fromTo(element,
+      {
+        opacity: 0,
+        y: 50,
+        scale: 0.9
+      },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 1,
+        ease: "back.out(1.7)"
+      }
+    );
+  }, { start: "top 80%" });
+
+  // Cards animation
+  const cardsRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
+    const cards = element.querySelectorAll('.testimonial-card');
+    
+    gsap.fromTo(cards,
+      {
+        opacity: 0,
+        y: 80,
+        rotationX: 45,
+        scale: 0.8
+      },
+      {
+        opacity: 1,
+        y: 0,
+        rotationX: 0,
+        scale: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "back.out(1.7)"
+      }
+    );
+  }, { start: "top 75%" });
+
+  // Form heading animation
+  const formHeadingRef = useGSAPScrollTrigger<HTMLDivElement>((element) => {
+    gsap.fromTo(element,
+      {
+        opacity: 0,
+        y: 50
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      }
+    );
+  }, { start: "top 80%" });
 
   const getInitials = (name: string) => {
     return name
@@ -114,7 +187,11 @@ const Feedbacks = () => {
   const scrollToNextSection = () => {
     const testimonialSection = document.getElementById('testimonials');
     if (testimonialSection) {
-      testimonialSection.scrollIntoView({ behavior: 'smooth' });
+      gsap.to(window, {
+        duration: 1.5,
+        scrollTo: { y: testimonialSection, offsetY: 0 },
+        ease: "power2.inOut"
+      });
     }
   };
 
@@ -148,7 +225,7 @@ const Feedbacks = () => {
         <div className="container mx-auto px-4 text-center z-10">
           <div 
             ref={titleRef}
-            className={`scroll-fade-in ${titleVisible ? 'animate' : ''}`}
+            className="mb-8"
           >
             <h1 className="text-4xl md:text-7xl font-orbitron font-bold mb-6 relative heading-glow">
               <span className="text-cyber relative z-10">Feedbacks</span>
@@ -173,7 +250,7 @@ const Feedbacks = () => {
         <div className="container mx-auto px-4">
           <div 
             ref={feedbacksRef}
-            className={`text-center mb-16 scroll-fade-in ${feedbacksVisible ? 'animate' : ''}`}
+            className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 text-primary relative heading-glow">
               <span className="text-cyber relative z-10">Community Feedbacks</span>
@@ -212,11 +289,11 @@ const Feedbacks = () => {
               <div className="flex justify-center">
                 <div 
                   ref={cardsRef}
-                  className={`grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl w-full stagger-children ${cardsVisible ? 'animate' : ''}`}
+                  className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl w-full"
                 >
                   {displayedTestimonials.map((testimonial) => (
                     <div key={testimonial.id}>
-                      <Card className="bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 h-80 card-glossy-glow">
+                      <Card className="testimonial-card bg-card/50 cyber-border hover:border-primary/60 transition-all duration-300 h-80 card-glossy-glow">
                         <CardHeader>
                           <div className="flex items-center justify-between">
                             <CardTitle className="text-lg font-orbitron text-primary">
@@ -272,7 +349,7 @@ const Feedbacks = () => {
         <div className="container mx-auto px-4">
           <div 
             ref={formHeadingRef}
-            className={`text-center mb-16 scroll-fade-in ${formHeadingVisible ? 'animate' : ''}`}
+            className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl font-orbitron font-bold mb-4 relative heading-glow">
               <span className="text-cyber relative z-10">Give your Feedback</span>

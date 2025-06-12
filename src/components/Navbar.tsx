@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Menu, X, Sun, Moon, User, LogOut, Shield } from 'lucide-react';
@@ -18,6 +18,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const { user, profile, signOut, isAdmin } = useAuth();
+  const location = useLocation();
 
   const navLinks = [
     { name: 'Home', href: '/' },
@@ -34,6 +35,10 @@ const Navbar = () => {
     } catch (error) {
       console.error('Error signing out:', error);
     }
+  };
+
+  const isActiveLink = (href: string) => {
+    return location.pathname === href;
   };
 
   return (
@@ -56,7 +61,11 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className="text-foreground/80 hover:text-primary transition-colors font-fira text-sm tracking-wider"
+                className={`transition-colors font-fira text-sm tracking-wider ${
+                  isActiveLink(link.href)
+                    ? 'text-primary border-b-2 border-primary'
+                    : 'text-foreground/80 hover:text-primary'
+                }`}
               >
                 {link.name}
               </Link>
@@ -160,7 +169,11 @@ const Navbar = () => {
                         <Link
                           key={link.name}
                           to={link.href}
-                          className="block text-foreground/80 hover:text-primary transition-colors font-fira text-base tracking-wider py-2 px-2 rounded hover:bg-muted/50"
+                          className={`block transition-colors font-fira text-base tracking-wider py-2 px-2 rounded hover:bg-muted/50 ${
+                            isActiveLink(link.href)
+                              ? 'text-primary bg-primary/10 border-l-2 border-primary'
+                              : 'text-foreground/80 hover:text-primary'
+                          }`}
                           onClick={() => setIsOpen(false)}
                         >
                           {link.name}
