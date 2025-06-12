@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { Link } from 'react-router-dom';
@@ -11,11 +12,11 @@ interface Testimonial {
   id: string;
   name: string;
   feedback: string;
-  message?: string;
   rating?: number;
   position?: string;
   created_at: string;
-  status?: string;
+  approved: boolean;
+  email?: string;
 }
 
 const TestimonialsSection = () => {
@@ -43,7 +44,7 @@ const TestimonialsSection = () => {
       const { data, error } = await supabase
         .from('testimonials')
         .select('*')
-        .eq('status', 'approved')
+        .eq('approved', true)
         .order('created_at', { ascending: false })
         .limit(3);
 
@@ -53,14 +54,15 @@ const TestimonialsSection = () => {
       }
       
       if (data) {
-        const formattedData = data.map(item => ({
+        const formattedData: Testimonial[] = data.map(item => ({
           id: item.id,
           name: item.name || 'Anonymous',
-          feedback: item.message || item.feedback || '', // Handle both fields
+          feedback: item.feedback || '',
           rating: item.rating,
           position: item.position,
           created_at: item.created_at,
-          status: item.status
+          approved: item.approved,
+          email: item.email
         }));
         
         console.log('Formatted testimonials:', formattedData);
@@ -160,7 +162,7 @@ const TestimonialsSection = () => {
                       </div>
                     </div>
                     <p className="text-foreground/80 font-fira text-sm leading-relaxed flex-1 overflow-hidden">
-                      "{testimonial.feedback || testimonial.message}"
+                      "{testimonial.feedback}"
                     </p>
                   </Card>
                 </div>

@@ -6,18 +6,22 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 export const useGSAPAnimation = <T extends HTMLElement = HTMLDivElement>(
-  animation: (element: T) => gsap.core.Timeline | void,
+  animation: (element: T) => gsap.core.Timeline | void | (() => void),
   dependencies: any[] = []
 ): MutableRefObject<T | null> => {
   const ref = useRef<T | null>(null);
 
   useEffect(() => {
     if (ref.current) {
-      const tl = animation(ref.current);
+      const result = animation(ref.current);
       return () => {
-        // Only call kill if tl exists and has the kill method
-        if (tl && typeof tl.kill === 'function') {
-          tl.kill();
+        // Handle different return types from the animation function
+        if (typeof result === 'function') {
+          // If animation function returned a cleanup function, call it
+          result();
+        } else if (result && typeof result.kill === 'function') {
+          // If it returned a GSAP timeline, kill it
+          result.kill();
         }
         // Clean up ScrollTriggers
         ScrollTrigger.getAll().forEach(trigger => {
