@@ -91,7 +91,7 @@ const Navbar = () => {
                     <>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem asChild className="font-fira">
-                        <Link to="/admin/blog">
+                        <Link to="/admin">
                           <Shield size={16} className="mr-2" />
                           Admin Panel
                         </Link>
@@ -181,7 +181,7 @@ const Navbar = () => {
                           </button>
                           {isAdmin() && (
                             <Link
-                              to="/admin/blog"
+                              to="/admin"
                               className="block py-2 px-2 text-sm font-fira text-foreground/80 hover:text-primary transition-colors rounded hover:bg-muted/50"
                               onClick={() => setIsOpen(false)}
                             >
